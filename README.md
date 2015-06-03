@@ -1,33 +1,44 @@
-# biomartyr
+# biomartian
 Convert gene names via the command line
 
 # Example
 
 ```bash
-endrebak@havpryd ~/C/biomartyr> head -3 examples/MedIIvsD.txt
-NM_001001799
-NM_001002288
-NM_001002807
+endrebak@havpryd ~/C/biomartian> head examples/MedIIvsD.txt
+"Gene"	"logFC"	"AveExpr"	"t"	"P.Value"	"adj.P.Val"	"B"
+"Brinp3"	-1.92040698516041	6.33733039821208	-15.8560970364466	9.80976633683213e-22	1.00833559234093e-17	39.2628387337609
+"Tle4"	-1.68336568459123	6.88285301682597	-15.7648914045375	1.26286629387054e-21	1.00833559234093e-17	39.0042901931606
+"Rab26"	-1.83060602348488	5.57320249551508	-15.3566464428448	3.9584556921429e-21	2.10708596492767e-17	37.8733270198807
+"Ipcef1"	-1.97594838378759	4.80047582596103	-15.1811582876935	6.50763488038432e-21	2.59801053512143e-17	37.3586023685738
+"Rassf2"	1.08094275753519	5.89304511598244	14.3929359223272	6.35258011130134e-20	2.02888703594742e-16	35.1148695130484
+"Nxph3"	-3.27998684674834	4.6844454153822	-14.1788470990124	1.19509879994731e-19	3.18075545605976e-16	34.4824127862572
+"Sstr2"	-1.81121949561318	4.21103179776388	-14.1051737464681	1.48737414455869e-19	3.39312538777967e-16	34.2722387838645
+"Lrrtm2"	-1.3944222489979	6.54430209960799	-13.9397510360006	2.4368839266705e-19	4.86432492812514e-16	33.761576842477
+"Slc12a4"	1.15991299670081	4.67930875026887	13.7066342481116	4.91492304011697e-19	8.72071178084754e-16	33.1018886969949
 
-# Usage: python biomartyr.py <output_folder> <input_files>
-endrebak@havpryd ~/C/biomartyr> python biomartyr.py examples/output_data examples/MedIIvsD.txt
-Output folder: examples/output_data (Module: biomartyr, Time: Wed, 03 Jun 2015 10:00:28)
-Input files: examples/MedIIvsD.txt (Module: biomartyr, Time: Wed, 03 Jun 2015 10:00:28)
-Loading biomaRt. (Module: biomartyr, Time: Wed, 03 Jun 2015 10:00:29)
-Converting 1793 gene names in file examples/MedIIvsD.txt to entrez gene ID (Module: biomartyr, Time: Wed, 03 Jun 2015 10:00:34)
 
-# Notice gene missing; no suitable value for it was found.
-endrebak@havpryd ~/C/biomartyr> head -3 examples/output_data/MedIIvsD.txt
-Tmem35	NM_001001799
-Clic1	NM_001002807
-Rasl11b	NM_001002830
+# Usage: python biomartian.py <name_of_column_to_convert> <input_type> <output_type> <species> <input_file>
+endrebak@havpryd ~/C/biomartian> python biomartian.py Gene external_gene_name refseq_mrna rnorvegicus_gene_ensembl examples/MedIIvsD.txt  | head
+Gene	logFC	AveExpr	t	P.Value	adj.P.Val	B	refseq_mrna
+Brinp3	-1.9204069851604098	6.33733039821208	-15.8560970364466	9.80976633683213e-22	1.00833559234093e-17	39.2628387337609	NM_173121
+Tle4	-1.68336568459123	6.882853016825969	-15.764891404537499	1.26286629387054e-21	1.00833559234093e-17	39.0042901931606	NA
+Tle4	-1.68336568459123	6.882853016825969	-15.764891404537499	1.26286629387054e-21	1.00833559234093e-17	39.0042901931606	NM_019141
+Rab26	-1.83060602348488	5.57320249551508	-15.3566464428448	3.958455692142899e-21	2.10708596492767e-17	37.873327019880705	NM_133580
+Ipcef1	-1.97594838378759	4.80047582596103	-15.181158287693501	6.50763488038432e-21	2.59801053512143e-17	37.3586023685738	NM_001170799
+Rassf2	1.08094275753519	5.89304511598244	14.392935922327199	6.352580111301339e-20	2.0288870359474198e-16	35.1148695130484	NM_001037096
+Nxph3	-3.27998684674834	4.684445415382201	-14.178847099012401	1.19509879994731e-19	3.1807554560597598e-16	34.4824127862572	NM_021679
+Sstr2	-1.8112194956131797	4.21103179776388	-14.1051737464681	1.48737414455869e-19	3.3931253877796696e-16	34.272238783864495	NM_019348
+Sstr2	-1.8112194956131797	4.21103179776388	-14.1051737464681	1.48737414455869e-19	3.3931253877796696e-16	34.272238783864495	NA
+
+# To show logging info add logging as final argument
+python biomartian.py Gene external_gene_name refseq_mrna rnorvegicus_gene_ensembl examples/MedIIvsD.txt logging
 ```
 
 # TODO
 
-* Make more general; currently the species and conversion to/from values are hardcoded.
-* Accept all kinds of tabular data (instead of merely one-column lists) and output the input file with an additional column for the converted values.
+* Add options to list possible species and possible gene types per species
+* Allow files without header for index column (how?)
 
 # Issues
 
-Please use the biomartyr [issues page](https://github.com/endrebak/biomartyr/issues) for issues, suggestions, feature-requests and troubleshooting.
+Please use the biomartian [issues page](https://github.com/endrebak/biomartian/issues) for issues, suggestions, feature-requests and troubleshooting.
