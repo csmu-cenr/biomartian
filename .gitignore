@@ -1,3 +1,5 @@
 examples/output_data/
+*hidden*
+*fuse*
 *temp/
 *.pyc

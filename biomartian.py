@@ -13,17 +13,17 @@
 
 from __future__ import print_function
 
-# ugly hack to support python2 and 3
-try:
-    from io import StringIO
-except ImportError:
-    from cStringIO import StringIO
-
 import pyper as pr
 import pandas as pd
 import logging
 import sys
 from sys import stdout
+
+# ugly hack to support python2 and 3
+try:
+    from io import StringIO
+except ImportError:
+    from cStringIO import StringIO
 
 
 def set_up_mart(r_session, dataset):
@@ -45,7 +45,7 @@ def convert_genes(r_session, genes, input_type, output_type, gene_column):
     gene_name_map = pd.read_table(StringIO(gene_name_map),
                                   skiprows=[0, 1], usecols=[1,2],
                                   names=[gene_column, output_type],
-                                  header=None, sep="\s+")
+                                  header=None, sep="\s+").dropna(how="any")
 
     return gene_name_map
 
@@ -60,8 +60,10 @@ def main(gene_column, input_type, output_type, species, input_file):
     logging.info("Loading biomaRt for species: {}".format(species))
     set_up_mart(r_session, species)
 
-    logging.info("Converting {} gene names in file {} to entrez gene ID".format(len(genes), input_file))
+    logging.info("Converting {} gene names in file {} to {}".format(len(genes), input_file, output_type))
     converted_genes = convert_genes(r_session, genes, input_type, output_type, gene_column)
+    converted_genes.to_csv("testing")
+
 
     logging.info("Creating new dataframe with additional gene names.")
     final_df = df.merge(converted_genes, on=gene_column)
