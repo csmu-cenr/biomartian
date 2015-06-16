@@ -1,4 +1,5 @@
 examples/output_data/
+cache/
 *hidden*
 *fuse*
 *temp/

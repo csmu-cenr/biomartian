@@ -58,6 +58,9 @@ Creating new dataframe with additional gene names. (Time: Wed, 03 Jun 2015 12:49
 
 * Add options to list possible species and possible gene types per species
 * Allow files without header for index column (how?)
+* Add input separator argument; infer by default
+* Add argument to tell whether file includes header or not.
+* Allow both header name and column number to indicate column to convert
 
 # Issues
 
