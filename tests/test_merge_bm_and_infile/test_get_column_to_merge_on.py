@@ -16,6 +16,11 @@ def describe_get_column_to_merge_on():
 
         assert "Gene" == get_column_to_merge_on(in_df.columns, 0)
 
+
+    def test_with_strin_int(in_df):
+
+        assert "Gene" == get_column_to_merge_on(in_df.columns, "0")
+
 @pytest.fixture
 def map_df():
     return pd.read_table(StringIO(u"""Gene    Term

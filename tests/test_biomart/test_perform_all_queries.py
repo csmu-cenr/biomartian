@@ -6,6 +6,7 @@ from utils.unit_test_helpers import StringIO
 
 from biomart.query_bm import perform_all_queries
 
+"Ensure that intype outtype df map does not contain equal keys; happened once due to sorting."
 
 # @pytest.mark.integration
 # def describe_perform_all_queries():

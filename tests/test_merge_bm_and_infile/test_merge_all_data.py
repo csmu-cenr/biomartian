@@ -15,7 +15,7 @@ def test_attach_all_columns(in_df, column_df_map, expected_result):
 @pytest.fixture
 def column_df_map(go_map_df, moo_map_df):
 
-    return {("Gene", "external_gene_name"): go_map_df, (0, "niniNI"): moo_map_df}
+    return {("Gene", "external_gene_name"): [go_map_df], (0, "niniNI"): [moo_map_df]}
 
 
 @pytest.fixture

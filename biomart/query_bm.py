@@ -1,25 +1,33 @@
 from os.path import dirname, join as path_join
 from subprocess import call
 import logging
+from collections import defaultdict
 
 import pandas as pd
 
 from r.r import set_up_mart
 
 from config.cache_settings import memory, default_cache_path
+from config.logging_settings import set_up_logging
+
+set_up_logging(logging.DEBUG)
 
 
-def perform_all_queries(dataset, mart, intype_outtype_map, cache_directory=default_cache_path):
+def perform_all_queries(dataset, mart, intypes, outtype_lists, cache_directory=default_cache_path):
 
-    intype_outtype_df_map = {}
-    for intype_outtype_tuple in intype_outtype_map.items():
+    intype_outtype_df_map = defaultdict(list)
+    for intype, outtype_list in zip(intypes, outtype_lists):
 
-        # sorting to ensure always same order so that cache data is used if exists
-        intype, outype = sorted(intype_outtype_tuple)
+        for outtype in outtype_list:
 
-        map_df = get_bm(intype, outype, dataset, mart, cache_directory)
+            original_intype_outtype = (intype, outtype)
+            # sorting to ensure always same order so that cache data is used if exists
+            intype, outype = sorted(original_intype_outtype)
 
-        intype_outtype_df_map[intype_outtype_tuple] = map_df
+            logging.debug("Querying biomart for {} to {} map.".format(intype, outype))
+            map_df = get_bm(intype, outype, dataset, mart, cache_directory)
+
+            intype_outtype_df_map[original_intype_outtype].append(map_df)
 
     return intype_outtype_df_map
 
@@ -52,7 +60,7 @@ def get_bm(intype, outtype, dataset, mart, cache_directory):
 
     write_command = """
 
-    write.table(input_output_map_df, '{}', sep='\\t', row.names=F)
+    write.table(input_output_map_df, '{}', sep='\t', row.names=F)
 
     """.format(outfile)
 

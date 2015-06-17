@@ -1,6 +1,8 @@
 # biomartian
 Convert gene names via the command line
 
+# Undergoing massive rewrite atm. Check back in a week :)
+
 # Example
 
 #### Input data

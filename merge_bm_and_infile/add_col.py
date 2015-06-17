@@ -1,6 +1,7 @@
 def attach_column(in_df, map_df, merge_on, intype):
 
-    merge_on = get_column_to_merge_on(in_df.columns, merge_on)
+    in_df_cols = list(in_df.columns)
+    merge_on = get_column_to_merge_on(in_df_cols, merge_on)
 
     relevant_maps = map_df[map_df[intype].isin(in_df[merge_on])].dropna()
 
@@ -15,8 +16,8 @@ def get_column_to_merge_on(in_df_columns, merge_on_int_or_string):
     This method takes care of the conversions."""
 
     try:
-        merge_on = list(in_df_columns)[merge_on_int_or_string]
-    except TypeError: # merge on was already a string
+        merge_on = in_df_columns[int(merge_on_int_or_string)]
+    except ValueError: # merge on was already a string
         merge_on = merge_on_int_or_string
 
     return merge_on

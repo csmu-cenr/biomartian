@@ -4,10 +4,9 @@ import pandas as pd
 from read_indata.read_indata import read_indata
 from utils.unit_test_helpers import format_df_string, StringIO
 
-def test_read_indata_with_no_header_col(df_header,
-                                        expected_result_header):
+def test_read_indata_with_header(df_header, expected_result_header):
 
-    actual_result = read_indata(df_header, True)
+    actual_result = read_indata(df_header, False)
 
     if not actual_result.equals(expected_result_header):
         print(actual_result, "ACTUAL")

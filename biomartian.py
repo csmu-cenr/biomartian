@@ -19,7 +19,7 @@ Options:
     -m MART --mart=MART           which mart to use [default: ensembl]
     -d DATASET --dataset=DATASET  which dataset to use [default: hsapiens_gene_ensembl]
     -c COLUMN --column=COLUMN     name or number of the column to join on in FILE (comma-separated)
-    -i INTYPE --intype=INTYPE     the datatype in the column to merge on (comma-separated, must have length equal to -c)
+    -i INTYPE --intype=INTYPE     the datatype in the column to merge on (comma-separated, must have length equal to COLUMN)
     -o OUTTYPE --outtype=OUTTYPE  the datatype to get (joining on value COLUMN) (whitespace-separated list of comma-separated tuples)
     -n --noheader                 the input data does not contain a header (must use integer indexing)
 Lists:
@@ -41,15 +41,6 @@ from docopt import docopt
 
 
 
-# from add_columns.add_columns import add_columns
-# from read_indata.read_indata import read_indata
-
-# from config import logging_settings
-# from config.cache_settings import memory
-
-
-# logging_settings.set_up_logging(level=logging.DEBUG)
-
 if __name__ == "__main__":
 
 
@@ -61,28 +52,28 @@ if __name__ == "__main__":
         # webbrowser.open_new_tab("http://github.com/endrebak/biomartian/issues")
     # else:
         # delay loading so that help message screen shown instantaneously
-        # from biomart.query_bm import get_bm
+
+    import sys
+    from collections import defaultdict
 
     from args.validate_args import validate_args
     from args.parse_args import parse_args
+    from biomart.query_bm import perform_all_queries
+    from merge_bm_and_infile.merge_bm_infile import convert_in_out_map_to_merge_in_map, \
+        attach_all_columns
+    from read_indata.read_indata import read_indata
+
 
     validate_args(args)
     args = parse_args(args)
-    print(args)
 
+    in_df = read_indata(args["FILE"], False)
+    columns, intypes, outtype_lists = args["--column"], args["--intype"], args["--outtype"]
+    dataset, mart = args["--dataset"], args["--mart"]
 
+    intype_outtype_df_map = perform_all_queries(dataset, mart, intypes, outtype_lists)
+    merge_col_intype_to_df_map = convert_in_out_map_to_merge_in_map(intype_outtype_df_map,
+                                                                    columns, intypes, outtype_lists)
+    in_df = attach_all_columns(in_df, merge_col_intype_to_df_map)
 
-    # validate_args(args)
-
-    # website, issues = args["--website"]
-
-    # intype, outtype, dataset, mart = extract_args("get_bm", args)
-    # get_bm(intype, outtype, dataset, mart)
-
-    #
-
-    # df.to_csv(sys.stdout, index=False, sep="\t")
-    # for intype, outtype, timestamp in timestamps:
-    #     logging.info('Map between "{}" and "{}" from dataset "{}" downloaded' \
-    #                 ' from biomart {} at {}.' \
-    #                 .format(intype, outtype, dataset, mart, timestamp))
+    in_df.to_csv(sys.stdout, sep="\t", index=False)

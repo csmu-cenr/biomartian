@@ -8,7 +8,7 @@ from utils.unit_test_helpers import format_df_string, StringIO
 def test_read_indata_with_no_header_col(df_no_index_header,
                                         expected_result_no_index_header):
 
-    actual_result = read_indata(df_no_index_header, True)
+    actual_result = read_indata(df_no_index_header, False)
 
     if not actual_result.equals(expected_result_no_index_header):
         print(actual_result, "ACTUAL")
