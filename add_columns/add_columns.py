@@ -74,24 +74,6 @@ def _get_data(intype, outtype, dataset, mart):
     return map_df
 
 
-# def convert_r_string_to_df(df_string):
-
-#     assert df_string, "dataframe empty"
-#     # Hack because I've had some problems with pyper
-#     # The API is just r_session.get("df_name")
-
-#     try: # python3
-#         df_as_string = StringIO(df_string)
-#     except: # python2
-#         df_as_string = StringIO(unicode(df_string, "utf-8"))
-
-#     df = pd.read_table(df_as_string,
-#                        skiprows=[0, 1], usecols=[1,2],
-#                        header=None, sep="\s+", dtype=str).dropna(how="any")
-
-#     return df
-
-
 def add_columns(in_df, dataset, mart, additions_to_make):
 
     output_positions, timestamps = [], []
@@ -115,36 +97,3 @@ def add_columns(in_df, dataset, mart, additions_to_make):
             logging.debug("Trying to merge on '{}'".format(merge_on))
 
     return in_df, timestamps
-
-
-def get_column_to_merge_on(in_df_columns, merge_on_int_or_string):
-    """Users can use both an int or a name to choose columns.
-
-    This method takes care of the conversions."""
-
-    try:
-        merge_on = list(in_df_columns)[merge_on_int_or_string]
-    except TypeError: # merge on was already a string
-        merge_on = merge_on_int_or_string
-
-    return merge_on
-
-
-def attach_columns(in_df, map_df, merge_on, outtype, non_long):
-
-    # change the intype to "index": hack, should only be done when no header?
-    map_df.columns = [col if col == outtype else "index" for col in map_df.columns]
-
-    logging.debug("Merging:\n" + str(in_df.head()))
-    logging.debug("And:\n" + str(map_df.head()))
-    logging.debug("On:\n" + merge_on)
-
-    relevant_maps = map_df[map_df[merge_on].isin(in_df[merge_on])].dropna()
-    if not non_long:
-        in_df = in_df.merge(relevant_maps, on=merge_on, how="outer").dropna().drop_duplicates()
-    else:
-        d = {k: ",".join(g[outtype].tolist()) for k, g in relevant_maps.groupby(merge_on)}
-        col = in_df[merge_on].map(d)
-        in_df.insert(len(in_df.columns), outtype, col)
-
-    return in_df

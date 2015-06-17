@@ -25,19 +25,18 @@ class CheckedRSession():
 
 def set_up_mart(mart, dataset=None):
 
-    r = CheckedRSession()
+    r = CheckedRSession(debug=True)
 
     r.call("library(biomaRt)")
 
     if dataset:
         get_mart_command = 'mart <- useMart("{}", dataset = "{}")'.format(mart, dataset)
     else:
-        get_mart_command = 'mart <- useMart("{}")'
+        get_mart_command = 'mart <- useMart("{}")'.format(mart)
 
     r.call("options(max.print=1000000)")
 
-    logging.debug("Setting up mart with: " + get_mart_command)
-    logging.debug("Mart is: " + r.call(get_mart_command))
+    r.call(get_mart_command)
 
     return r
 

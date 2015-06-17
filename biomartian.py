@@ -1,54 +1,88 @@
-import sys
-import logging
+"""biomartian
 
-import pandas as pd
-import pyper as pr
+Query biomart from the command line.
+For help and examples, visit github.com/endrebak/biomartian (biomartian --website)
+
+Usage:
+    biomartian [--mart=MART] [--dataset=DATASET] --column=COLUMN --intype=INTYPE --outtype=OUTTYPE [--noheader] FILE
+    biomartian --list-marts
+    biomartian -m MART --list-datasets
+    biomartian -m MART -d DATASET [--list-kinds|--list-examples]
+    biomartian --list-columns FILE
+    biomartian [--website|--issues]
+
+Arguments:
+    FILE  file with COLUMN(s) to join mart data on
+
+Options:
+    -h --help                     show this message
+    -m MART --mart=MART           which mart to use [default: ensembl]
+    -d DATASET --dataset=DATASET  which dataset to use [default: hsapiens_gene_ensembl]
+    -c COLUMN --column=COLUMN     name or number of the column to join on in FILE (comma-separated)
+    -i INTYPE --intype=INTYPE     the datatype in the column to merge on (comma-separated, must have length equal to -c)
+    -o OUTTYPE --outtype=OUTTYPE  the datatype to get (joining on value COLUMN) (whitespace-separated list of comma-separated tuples)
+    -n --noheader                 the input data does not contain a header (must use integer indexing)
+Lists:
+    --list-marts     show all available marts
+    --list-datasets  show all available datasets for MART
+    --list-kinds     show all kinds of data available for MART and DATASET
+    --list-examples  show examples of all kinds of data for MART and DATASET
+    --list-columns   show column numbers next to data to help write queries
+Web:
+    --website  visit github.com/endrebak/biomartian for more examples and docs
+    --issues   visit the issues page for biomartian to ask questions, make suggestions or report bugs
+"""
 
 
-from add_columns.add_columns import add_columns
+# Formatting:
+#     --stackcol  if multiple stackcol rows per indexcol, merge them into comma-separated list indexcol:stackcol
 
-from config import logging_settings
-from config.cache_settings import memory
+from docopt import docopt
 
 
-# have option --noheader
-# r tables without name of first column is read with index column as index
-# check for this with all(df.index == range(len(df)))
-# if this is true run reset_index()
 
-# def add_columns(df, additions):
+# from add_columns.add_columns import add_columns
+# from read_indata.read_indata import read_indata
+
+# from config import logging_settings
+# from config.cache_settings import memory
+
 
 # logging_settings.set_up_logging(level=logging.DEBUG)
 
-
-
-
-
-
 if __name__ == "__main__":
 
-    # intype, outtype = "external_gene_name", "entrezgene"
 
-    dataset, mart = "rnorvegicus_gene_ensembl", "ensembl"
-    # timestamp, df = get_timestamped_data(intype, outtype, dataset, mart)
+    args = docopt(__doc__, help=True)
 
-    infile = "examples/test_file.txt"
-    df = pd.read_table(infile)
-    df = df.reset_index()
-    # print(df)
-    # raise
+    # if args["--website"]:
+        # webbrowser.open_new_tab("http://github.com/endrebak/biomartian")
+    # if args["--issues"]:
+        # webbrowser.open_new_tab("http://github.com/endrebak/biomartian/issues")
+    # else:
+        # delay loading so that help message screen shown instantaneously
+        # from biomart.query_bm import get_bm
 
-    dataset = "rnorvegicus_gene_ensembl"
+    from args.validate_args import validate_args
+    from args.parse_args import parse_args
 
-    additions_to_make = {"external_gene_name": {"out_types": ["go_id", "entrezgene"],
-                                                "non_long": ["go_id"],
-                                                "insert_positions": [0, 5],
-                                                "merge_on": 0}}
+    validate_args(args)
+    args = parse_args(args)
+    print(args)
 
 
-    df, timestamps = add_columns(df, dataset, mart, additions_to_make)
-    df.to_csv(sys.stdout, index=False, sep="\t")
-    for intype, outtype, timestamp in timestamps:
-        logging.info('Map between "{}" and "{}" from dataset "{}" downloaded' \
-                    ' from biomart {} at {}.' \
-                    .format(intype, outtype, dataset, mart, timestamp))
+
+    # validate_args(args)
+
+    # website, issues = args["--website"]
+
+    # intype, outtype, dataset, mart = extract_args("get_bm", args)
+    # get_bm(intype, outtype, dataset, mart)
+
+    #
+
+    # df.to_csv(sys.stdout, index=False, sep="\t")
+    # for intype, outtype, timestamp in timestamps:
+    #     logging.info('Map between "{}" and "{}" from dataset "{}" downloaded' \
+    #                 ' from biomart {} at {}.' \
+    #                 .format(intype, outtype, dataset, mart, timestamp))
