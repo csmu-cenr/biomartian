@@ -1,8 +1,11 @@
 
 import pandas as pd
 import logging
+import sys
 
 def read_indata(infile, noheader):
+
+    infile = sys.stdin if infile == "-" else infile
 
     if noheader:
         df = pd.read_table(infile, header=None, dtype=str, sep="\s+")

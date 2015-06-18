@@ -5,31 +5,50 @@ import pandas as pd
 
 from utils.unit_test_helpers import StringIO
 
-from args.validate_args import validate_column_list_lengths
+from args.validate_args import validate_args
 
 def describe_validate_column_list_lengths():
 
-    def test_with_too_few_intypes():
-        with pytest.raises(ValueError):
-            validate_column_list_lengths("0,1,4", "gene,chromo", "mirna mirna2 mirna3")
+    def test_with_valid_args(valid_args):
+        validate_args(valid_args)
 
-    def test_with_too_few_outtypes():
+    def test_with_invalid_args(invalid_args):
         with pytest.raises(ValueError):
-            validate_column_list_lengths("0,1,4", "gene,chromo,whatevz", "mirna mirna2")
+            validate_args(invalid_args)
 
 
 @pytest.fixture
-def validate_args():
-    {'--datasets': False,
-     '--examples': False,
-     '--issues': False,
-     '--kinds': False,
-     '--marts': False,
-     '--website': False,
-     '-c': ['0'],
-     '-d': 'hsapiens_gene_ensembl',
-     '-i': [],
-     '-m': 'ensembl',
-     '-n': 0,
-     'FILE': None,
-     'OUTTYPE': []}
+def valid_args():
+
+    return {'--column': ['0', '0'],
+            '--dataset': 'rnorvegicus_gene_ensembl',
+            '--intype': ['external_gene_name', 'external_gene_name'],
+            '--issues': False,
+            '--list-columns': False,
+            '--list-datasets': False,
+            '--list-examples': False,
+            '--list-kinds': False,
+            '--list-marts': False,
+            '--mart': 'ensembl',
+            '--noheader': False,
+            '--outtype': ['entrezgene', 'refseq_mrna'],
+            '--website': False,
+            'FILE': 'examples/test_file_full_header.txt'}
+
+@pytest.fixture
+def invalid_args():
+
+    return {'--column': ['0', '0'],
+            '--dataset': 'rnorvegicus_gene_ensembl',
+            '--intype': ['external_gene_name'],
+            '--issues': False,
+            '--list-columns': False,
+            '--list-datasets': False,
+            '--list-examples': False,
+            '--list-kinds': False,
+            '--list-marts': False,
+            '--mart': 'ensembl',
+            '--noheader': False,
+            '--outtype': ['entrezgene', 'refseq_mrna'],
+            '--website': False,
+            'FILE': 'examples/test_file_full_header.txt'}

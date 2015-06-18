@@ -12,32 +12,8 @@ from config.logging_settings import set_up_logging
 
 set_up_logging(logging.DEBUG)
 
-
-def perform_all_queries(dataset, mart, intypes, outtype_lists, cache_directory=default_cache_path):
-
-    intype_outtype_df_map = defaultdict(list)
-    for intype, outtype_list in zip(intypes, outtype_lists):
-
-        for outtype in outtype_list:
-
-            original_intype_outtype = (intype, outtype)
-            # sorting to ensure always same order so that cache data is used if exists
-            intype, outype = sorted(original_intype_outtype)
-
-            logging.debug("Querying biomart for {} to {} map.".format(intype, outype))
-            map_df = get_bm(intype, outype, dataset, mart, cache_directory)
-
-            intype_outtype_df_map[original_intype_outtype].append(map_df)
-
-    return intype_outtype_df_map
-
-
-
-
-
-
 @memory.cache(verbose=0)
-def get_bm(intype, outtype, dataset, mart, cache_directory):
+def get_bm(intype, outtype, dataset, mart, cache_directory=default_cache_path):
 
     """Queries biomart for data.
 
