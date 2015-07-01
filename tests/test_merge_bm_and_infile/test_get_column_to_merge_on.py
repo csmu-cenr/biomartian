@@ -2,9 +2,9 @@ import pytest
 
 import pandas as pd
 
-from utils.unit_test_helpers import StringIO
+from biomartian.utils.unit_test_helpers import StringIO
 
-from merge_bm_and_infile.add_col import get_column_to_merge_on
+from biomartian.merge_bm_and_infile.add_col import get_column_to_merge_on
 
 def describe_get_column_to_merge_on():
 

@@ -8,9 +8,9 @@ def read_indata(infile, noheader):
     infile = sys.stdin if infile == "-" else infile
 
     if noheader:
-        df = pd.read_table(infile, header=None, dtype=str, sep="\s+")
+        df = pd.read_table(infile, header=None, dtype=str)
     else:
-        df = pd.read_table(infile, header=0, dtype=str, sep="\s+")
+        df = pd.read_table(infile, header=0, dtype=str)
 
         # if the index is a data column
         if not all(df.index == range(len(df))):

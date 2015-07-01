@@ -1,4 +1,5 @@
 examples/output_data/
+*flycheck*
 cache/
 *hidden*
 *fuse*

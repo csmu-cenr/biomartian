@@ -1,9 +1,9 @@
 import pytest
 import pandas as pd
 
-from read_indata.read_indata import read_indata
+from biomartian.read_indata.read_indata import read_indata
 
-from utils.unit_test_helpers import format_df_string, StringIO
+from biomartian.utils.unit_test_helpers import format_df_string, StringIO
 
 def test_read_indata_with_no_header_col(df_no_index_header,
                                         expected_result_no_index_header):

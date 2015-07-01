@@ -3,52 +3,45 @@ import pytest
 import pandas as pd
 
 
-from utils.unit_test_helpers import StringIO
+from biomartian.utils.unit_test_helpers import StringIO
 
-from args.validate_args import validate_args
+from biomartian.args.validate_args import validate_same_number_of_args
 
-def describe_validate_column_list_lengths():
+from biomartian.args.validate_args import validate_outindexes_must_be_same_length_if_used
+
+def describe_validate_same_number_of_args():
 
     def test_with_valid_args(valid_args):
-        validate_args(valid_args)
+        validate_same_number_of_args(valid_args)
 
-    def test_with_invalid_args(invalid_args):
+    def test_with_invalid_args_too_few_intypes(invalid_args_too_few_intypes):
         with pytest.raises(ValueError):
-            validate_args(invalid_args)
+            validate_same_number_of_args(invalid_args_too_few_intypes)
 
+    @pytest.fixture
+    def valid_args():
+        return {'--column': ['0', '0'],
+                '--intype': ['external_gene_name', 'external_gene_name'],
+                '--outindex': [2],
+                '--outtype': ['entrezgene', 'refseq_mrna'],}
 
-@pytest.fixture
-def valid_args():
+    @pytest.fixture
+    def invalid_args_too_few_intypes():
 
-    return {'--column': ['0', '0'],
-            '--dataset': 'rnorvegicus_gene_ensembl',
-            '--intype': ['external_gene_name', 'external_gene_name'],
-            '--issues': False,
-            '--list-columns': False,
-            '--list-datasets': False,
-            '--list-examples': False,
-            '--list-kinds': False,
-            '--list-marts': False,
-            '--mart': 'ensembl',
-            '--noheader': False,
-            '--outtype': ['entrezgene', 'refseq_mrna'],
-            '--website': False,
-            'FILE': 'examples/test_file_full_header.txt'}
+        return {'--column': ['0', '0'],
+                '--intype': ['external_gene_name'],
+                '--outindex': [2],
+                '--outtype': ['entrezgene', 'refseq_mrna'],}
 
-@pytest.fixture
-def invalid_args():
+def describe_validate_outindexes_must_be_same_length_if_used():
 
-    return {'--column': ['0', '0'],
-            '--dataset': 'rnorvegicus_gene_ensembl',
-            '--intype': ['external_gene_name'],
-            '--issues': False,
-            '--list-columns': False,
-            '--list-datasets': False,
-            '--list-examples': False,
-            '--list-kinds': False,
-            '--list-marts': False,
-            '--mart': 'ensembl',
-            '--noheader': False,
-            '--outtype': ['entrezgene', 'refseq_mrna'],
-            '--website': False,
-            'FILE': 'examples/test_file_full_header.txt'}
+    def test_with_invalid_args_too_few_outindexes(invalid_args_too_few_outindexes):
+        with pytest.raises(ValueError):
+            validate_outindexes_must_be_same_length_if_used(invalid_args_too_few_outindexes)
+
+    @pytest.fixture
+    def invalid_args_too_few_outindexes():
+        return {'--column': ['0', '0'],
+                '--intype': ['external_gene_name', 'external_gene_name'],
+                '--outindex': [2],
+                '--outtype': ['entrezgene', 'refseq_mrna'],}
