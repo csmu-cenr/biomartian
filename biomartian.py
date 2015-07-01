@@ -1,4 +1,3 @@
-
 """biomartian
 
 For help and examples, visit github.com/endrebak/biomartian (biomartian --website)
@@ -41,7 +40,6 @@ Web:
     --phone-home  ask questions, make suggestions or report bugs at the biomartian issues page
 """
 
-
 # refactor so that modules in biomartian/
 # exachange pyper with wide diaper
 
@@ -80,7 +78,8 @@ if __name__ == "__main__":
 | |_) | | (_) | | | | | | (_| | |  | |_| | (_| | | | |
 |_.__/|_|\___/|_| |_| |_|\__,_|_|   \__|_|\__,_|_| |_|
                    Query biomart from the command line
-""", file=sys.stderr)
+""",
+          file=sys.stderr)
 
     args = docopt(__doc__, help=True)
 
@@ -93,7 +92,8 @@ if __name__ == "__main__":
     from biomartian.lists.get_lists import get_attributes
 
     validate_args(args)
-    columns, intypes, outtypes = args["--column"], args["--intype"], args["--outtype"]
+    columns, intypes, outtypes = args["--column"], args["--intype"
+                                                        ], args["--outtype"]
     dataset, mart = args["--dataset"], args["--mart"]
 
     if args["--list-marts"]:
@@ -113,24 +113,21 @@ if __name__ == "__main__":
 
     out_df = in_df.copy()
 
-
-
     for column, intype, outtype in zip(columns, intypes, outtypes):
 
         # sorting to ensure caching is triggered at every opportunity
         # (get_data produces a bi-directional map so order does not matter)
         ordered_intype, ordered_outtype = sorted([intype, outtype])
 
-        intype_outtype_df = get_data(ordered_intype, ordered_outtype, dataset, mart)
+        intype_outtype_df = get_data(ordered_intype, ordered_outtype, dataset,
+                                     mart)
         out_df = attach_column(out_df, intype_outtype_df, column, intype)
 
-
-
     # if args["--website"]:
-        # webbrowser.open_new_tab("http://github.com/endrebak/biomartian")
+    # webbrowser.open_new_tab("http://github.com/endrebak/biomartian")
     # if args["--issues"]:
-        # webbrowser.open_new_tab("http://github.com/endrebak/biomartian/issues")
+    # webbrowser.open_new_tab("http://github.com/endrebak/biomartian/issues")
     # else:
-        # delay loading so that help message screen shown instantaneously
+    # delay loading so that help message screen shown instantaneously
 
     # out_df.to_csv(sys.stdout, sep="\t", index=False)
