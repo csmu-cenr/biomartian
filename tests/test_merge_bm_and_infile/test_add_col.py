@@ -1,6 +1,7 @@
 import pytest
 
 import pandas as pd
+from numpy import array_equal
 
 from biomartian.utils.unit_test_helpers import StringIO
 
@@ -48,14 +49,18 @@ def describe_attach_column():
 
         actual_result = attach_column(in_df, map_df, "Gene", "external_gene_name")
 
-        assert actual_result.equals(expected_result)
+        assert array_equal(actual_result, expected_result)
 
 
     def test_attach_with_int(in_df, map_df, expected_result):
 
+        print(expected_result)
+
         actual_result = attach_column(in_df, map_df, 0, "external_gene_name")
 
-        assert actual_result.equals(expected_result)
+        print(actual_result)
+
+        assert array_equal(actual_result, expected_result)
 
     ###
 
@@ -107,4 +112,4 @@ def describe_attach_column():
 
         actual_result = attach_column(in_df_with_intype_as_col, map_df_with_intype_as_col, "GO_id", "GO_id")
 
-        assert actual_result.equals(expected_result_with_intype_as_col)
+        assert array_equal(actual_result, expected_result_with_intype_as_col)
