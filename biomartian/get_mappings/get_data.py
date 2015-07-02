@@ -1,6 +1,6 @@
 from biomartian.get_mappings.query_bm import get_bm
 from numpy import array
-# from biomartian.get_mappings.query_other import get_other
+from biomartian.get_mappings.query_other import get_other
 
 from biomartian.config.cache_settings import memory
 from biomartian.lists.get_lists import get_non_bm
@@ -9,8 +9,8 @@ from biomartian.lists.get_lists import get_non_bm
 @memory.cache(verbose=0)
 def get_data(intype, outtype, dataset, mart):
 
-    if mart == "biomartian":
-        return get_other(intype, outtype, dataset)
+    if is_requested_data_nonbm(mart, dataset, outtype):
+        return get_other(outtype, dataset, mart)
     else:
         return get_bm(intype, outtype, dataset, mart)
 

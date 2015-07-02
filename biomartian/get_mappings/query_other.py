@@ -17,3 +17,9 @@ def load_getter(mart, dataset, attribute, basefolder=""):
                                  "get_{attribute}".format(attribute=attribute))
 
     return attribute_function
+
+
+def get_other(outtype, dataset, mart):
+
+    getter = load_getter(mart, dataset, outtype, "biomartian/non_biomart")
+    return getter()
