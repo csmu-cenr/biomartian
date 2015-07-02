@@ -116,9 +116,9 @@ if __name__ == "__main__":
 
         # sorting to ensure caching is triggered at every opportunity
         # (get_data produces a bi-directional map so order does not matter)
-        ordered_intype, ordered_outtype = sorted([intype, outtype])
 
-        intype_outtype_df = get_data(ordered_intype, ordered_outtype, dataset,
+        # print(ordered_intype, ordered_outtype)
+        intype_outtype_df = get_data(intype, outtype, dataset,
                                      mart)
         out_df = attach_column(out_df, intype_outtype_df, column, intype)
 

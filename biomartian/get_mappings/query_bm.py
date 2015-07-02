@@ -12,7 +12,7 @@ from biomartian.config.logging_settings import set_up_logging
 
 set_up_logging(logging.DEBUG)
 
-# @memory.cache(verbose=0)
+@memory.cache(verbose=0)
 def get_bm(intype, outtype, dataset, mart, cache_directory=default_cache_path):
 
     """Queries biomart for data.
