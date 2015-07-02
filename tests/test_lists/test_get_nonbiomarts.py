@@ -45,6 +45,9 @@ def describe_get_marts():
         expected_result = expected_result.sort("attribute").reset_index(drop=True)
         actual_result = actual_result.sort("attribute").reset_index(drop=True)
 
+        print(expected_result)
+        print(actual_result)
+
         assert expected_result.equals(actual_result)
 
 @pytest.fixture

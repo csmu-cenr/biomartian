@@ -6,6 +6,7 @@ import pandas as pd
 
 from widediaper import R
 from biomartian.r.r import set_up_mart
+# from biomartian.get_mappings.get_data import get_non_bm
 
 from py.path import local
 
@@ -23,16 +24,17 @@ def get_non_bm_attributes(dataset_file):
 def get_non_bm(external_marts_folder="biomartian/non_biomarts"):
 
     rowdicts = []
-    for path, _, files in walk(external_marts_folder):
+    marts = walk(external_marts_folder).next()[1]
 
-        if path.count("/") != 3:
-            continue
+    for mart in marts:
+        mart_path = path_join(external_marts_folder, mart)
 
-        mart = path.split("/")[-1]
+        dataset_files = walk(mart_path).next()[2]
+        dataset_files = [f for f in dataset_files if f != "__init__.py"]
 
-        for dataset_file in [f for f in files if f != "__init__.py"]:
+        for dataset_file in dataset_files:
             dataset = dataset_file.replace(".py", "")
-            dataset_file = path_join(path, dataset_file)
+            dataset_file = path_join(mart_path, dataset_file)
 
             attributes = get_non_bm_attributes(dataset_file)
 
@@ -43,11 +45,16 @@ def get_non_bm(external_marts_folder="biomartian/non_biomarts"):
 
     external_marts_df = pd.DataFrame.from_dict(rowdicts)
 
+
     return external_marts_df[["mart", "dataset", "attribute"]]
 
 def get_marts():
 
-    return get_bm_marts()
+    print("in get marts")
+    non_biomarts = get_non_bm()
+    # biomarts = get_bm_marts()
+
+    return non_biomarts
 
 def get_bm_marts():
 

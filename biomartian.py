@@ -41,7 +41,6 @@ Web:
 """
 
 # refactor so that modules in biomartian/
-# exachange pyper with wide diaper
 
 # listmarts
 # Ensure reactome works with data
