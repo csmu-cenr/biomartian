@@ -41,7 +41,6 @@ Web:
 """
 
 # refactor so that modules in biomartian/
-# exachange pyper with wide diaper
 
 # listmarts
 # Ensure reactome works with data
@@ -130,4 +129,4 @@ if __name__ == "__main__":
     # else:
     # delay loading so that help message screen shown instantaneously
 
-    # out_df.to_csv(sys.stdout, sep="\t", index=False)
+    out_df.to_csv(sys.stdout, sep="\t", index=False)
