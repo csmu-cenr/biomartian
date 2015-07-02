@@ -19,7 +19,7 @@ def get_non_bm_attributes(dataset_file):
     return attributes
 
 
-def get_non_bm(external_marts_folder):
+def get_non_bm(external_marts_folder="biomartian/non_biomarts"):
 
     rowdicts = []
     for path, _, files in walk(external_marts_folder):
