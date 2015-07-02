@@ -4,6 +4,7 @@ from os.path import join as path_join
 
 import pandas as pd
 
+from widediaper import R
 from biomartian.r.r import set_up_mart
 
 from py.path import local
@@ -43,3 +44,26 @@ def get_non_bm(external_marts_folder="biomartian/non_biomarts"):
     external_marts_df = pd.DataFrame.from_dict(rowdicts)
 
     return external_marts_df[["mart", "dataset", "attribute"]]
+
+def get_marts():
+
+    return get_bm_marts()
+
+def get_bm_marts():
+
+    r = R()
+    r.load_library("biomaRt")
+    r("marts = listMarts()")
+    return r.get("marts")
+
+def get_bm_datasets(mart):
+
+    r = set_up_mart(mart)
+    r("datasets = listDatasets(mart)")
+    return r.get("datasets")
+
+def get_bm_attributes(mart, dataset):
+
+    r = set_up_mart(mart, dataset)
+    r("attributes = listAttributes(mart)")
+    return r.get("attributes")

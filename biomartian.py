@@ -88,8 +88,8 @@ if __name__ == "__main__":
     from biomartian.merge_bm_and_infile.add_col import attach_column
     from biomartian.read_indata.read_indata import read_indata
     from biomartian.config.other_data import other_data_df
-    from biomartian.lists.get_lists import get_marts, get_datasets
-    from biomartian.lists.get_lists import get_attributes
+    from biomartian.lists.get_lists import get_marts#, get_datasets
+    # from biomartian.lists.get_lists import get_attributes
 
     validate_args(args)
     columns, intypes, outtypes = args["--column"], args["--intype"
