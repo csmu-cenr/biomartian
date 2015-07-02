@@ -7,6 +7,7 @@ import pandas as pd
 from widediaper import R
 from biomartian.r.r import set_up_mart
 # from biomartian.get_mappings.get_data import get_non_bm
+from biomartian.config.cache_settings import memory
 
 from py.path import local
 
@@ -48,6 +49,8 @@ def get_non_bm(external_marts_folder="biomartian/non_biomarts"):
 
     return external_marts_df[["mart", "dataset", "attribute"]]
 
+
+@memory.cache(verbose=0)
 def get_marts():
 
     print("in get marts")
@@ -56,6 +59,8 @@ def get_marts():
 
     return non_biomarts
 
+
+@memory.cache(verbose=0)
 def get_bm_marts():
 
     r = R()
@@ -63,12 +68,16 @@ def get_bm_marts():
     r("marts = listMarts()")
     return r.get("marts")
 
+
+@memory.cache(verbose=0)
 def get_bm_datasets(mart):
 
     r = set_up_mart(mart)
     r("datasets = listDatasets(mart)")
     return r.get("datasets")
 
+
+@memory.cache(verbose=0)
 def get_bm_attributes(mart, dataset):
 
     r = set_up_mart(mart, dataset)
