@@ -3,6 +3,10 @@ Convert gene names via the command line
 
 # Undergoing massive rewrite atm. Check back in a week :)
 
+# TODO
+
+* decorator with to/from in header
+
 # Example
 
 #### Input data
