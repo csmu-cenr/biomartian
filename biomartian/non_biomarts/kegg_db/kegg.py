@@ -1,21 +1,18 @@
-# from widediaper import R
-from Bio.KEGG import REST as kegg
+from Bio.KEGG import REST
+import pandas as pd
 
-# @external(provides={"kegg", "entrez_gene"}, requires=["species"])
-# needs human, mouse, rat
-# hsa, rno, mmu
+import re
 
-def get_pathways(species):
-
-    pathways = kegg.get_list("pathway", species)
-
-    return pathways
 
 def get_pathways_genes(species):
 
+    all_but_digits = re.compile(r"\D+:")
 
-    pathways = get_pathways(species)
+    gene_pathway_rowdicts = []
+    for gene_pathway in REST.kegg_conv(species, "ncbi-gi"):
+        entrez, kegg = re.split(all_but_digits, gene_pathway)
+        gene_pathway_rowdicts.append({"entrez_gene": entrez, "kegg": kegg})
 
-    pathways_genes = 0
+    pathway_genes = pd.DataFrame.from_dict(gene_pathway_rowdicts)
 
-    return pathways_genes
+    return pathway_genes

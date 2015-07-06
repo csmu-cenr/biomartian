@@ -1,6 +1,11 @@
 # biomartian
 Convert gene names via the command line
 
+# TODO
+
+* Pretty print tables
+* Use decorators to register functions producing mappings (see chap 7 fluent python)
+
 # Undergoing massive rewrite atm. Check back in a week :)
 
 # TODO
