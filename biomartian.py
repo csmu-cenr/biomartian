@@ -1,72 +1,63 @@
-"""biomartian
+"""bm
 
-For help and examples, visit github.com/endrebak/biomartian (biomartian --website)
+For help and examples, visit github.com/endrebak/biomartian
 
 Usage:
-    biomartian [--mart=MART] [--dataset=DATASET] --column=COLUMN... --intype=INTYPE... --outtype=OUTTYPE... [--noheader] FILE
-    biomartian --annotation=TYPE --column=COLUMN... [--outindex=INDEX...] FILE
-    biomartian --list-marts
-    biomartian [--mart=MART] --list-datasets
-    biomartian [--mart=MART] [--dataset=DATASET] [--list-attributes|--list-examples]
-    biomartian --list-columns FILE
-    biomartian [--website|--issues]
+    bm [--mart=MART] [--dataset=DATASET] --mergecol=COL... --intype=IN... --outtype=OUT... [--noheader] FILE
+    bm --list-marts
+    bm [--mart=MART] --list-datasets
+    bm [--mart=MART] [--dataset=DATASET] --list-attributes
 
 Arguments:
-    FILE  file with COLUMN(s) to join mart data on (supports piping)
-    -i TYPE --intype=TYPE      the datatype in the column to merge on
-    -o TYPE --outtype=TYPE     the datatype to get (joining on value COLUMN)
-    -c COLUMN --column=COLUMN  name or number of the column to join on in FILE
+    FILE                   file with COL(s) to join mart data on (- for STDIN)
+    -i IN --intype=IN     the datatype in the column to merge on
+    -o OUT --outtype=OUT   the datatype to get (joining on value COL)
+    -c COL --mergecol=COL  name or number of the column to join on in FILE
 
 Note:
-    Required arguments --intype, --outtype and --column must be equal in number.
-    (--outindex must either not be used or equal in number to the above.)
+    Required args --intype, --outtype and --mergecol must be equal in number.
 
 Options:
-    -h --help                  show this message
-    -m MART --mart=MART        which mart to use [default: ensembl]
-    -d DATA --dataset=DATA     which dataset to use [default: hsapiens_gene_ensembl]
-    -x INDEX --outindex=INDEX  index at which to place the data (by default to the right
-                               of the COLUMN)
-    -a TYPE --definition=TYPE  add the definitions (annotations) of GOIDs or REACTOME terms
-    -n --noheader              the input data does not contain a header (must use integers
-                               to denote COLUMN)
+    -h      --help          show this message
+    -m MART --mart=MART     which mart to use [default: ensembl]
+    -d DATA --dataset=DATA  which dataset to use [default: hsapiens_gene_ensembl]
+    -n --noheader           the input data does not contain a header (must
+                            use integers to denote COL)
+
 Lists:
-    --list-marts     show all available marts
-    --list-datasets  show all available datasets for MART
-    --list-kinds     show all kinds of data available for MART and DATASET
-    --list-examples  show examples of all kinds of data for MART and DATASET
-Web:
-    --website     visit github.com/endrebak/biomartian for more examples and docs
-    --phone-home  ask questions, make suggestions or report bugs at the biomartian issues page
+    --list-marts       show all available marts
+    --list-datasets    show all available datasets for MART
+    --list-attributes  show all kinds of data available for MART and DATASET
 """
 
-# refactor so that modules in biomartian/
-
-# listmarts
-# Ensure reactome works with data
-# get output columns in the correct order
-# Formatting:
-#     --stackcol  if multiple stackcol rows per indexcol, merge them into comma-separated list indexcol:stackcol
-#                 this makes the data unsuitable for most downstream analysis (cf. Wickham's "Tidy Data")
-#     --transpose
-#     --na-symbol [default: NA]
-#     --drop-na
-#     --delim-col  [default: "\t"]
-#     --delim-stack [default: ,]
-# Cache:
-#     --view-dates
-#     --cache-delete
-# Helpers:
-#     --view-in-colnb
-#     --view-out-colnb
-#     --r-packages
-# --Other
-# Create examples in example-file folder
-# ensure that in and out-data are never the same
 from __future__ import print_function
 
 from docopt import docopt
 import sys
+
+def list_bm_info(list_marts, list_datasets, list_attributes, mart, dataset):
+    if list_marts:
+        lists = get_marts()
+    if list_datasets:
+        lists = get_datasets(mart)
+    if list_attributes:
+        lists = get_attributes(mart, dataset)
+
+    lists.to_csv(sys.stdout, sep="\t", index=False)
+    sys.exit()
+
+def append_data_to_infile(in_df, mergecols, intypes, outtypes, dataset, mart):
+
+    for column, intype, outtype in zip(mergecols, intypes, outtypes):
+
+        # sorting to ensure caching is triggered at every opportunity
+        # (get_data produces a bi-directional map so order does not matter)
+        sorted_intype, sorted_outtype = sorted([intype, outtype])
+
+        intype_outtype_df = get_bm(sorted_intype, sorted_outtype, dataset, mart)
+        in_df = attach_data(in_df, intype_outtype_df, column, intype)
+
+    return in_df
 
 if __name__ == "__main__":
 
@@ -82,52 +73,25 @@ if __name__ == "__main__":
 
     args = docopt(__doc__, help=True)
 
+    from ebs.read_indata import read_indata
+    from ebs.args import turn_docopt_arg_names_into_valid_var_names
+    from ebs.merge_cols import attach_data
+
     from biomartian.args.validate_args import validate_args
-    from biomartian.get_mappings.get_data import get_data
-    from biomartian.merge_bm_and_infile.add_col import attach_column
-    from biomartian.read_indata.read_indata import read_indata
-    from biomartian.config.other_data import other_data_df
-    from biomartian.lists.get_lists import get_marts#, get_datasets
-    from biomartian.lists.get_lists import get_bm_attributes
+    from biomartian.r.r import get_marts, get_datasets, get_attributes, get_bm
+
+    args = turn_docopt_arg_names_into_valid_var_names(args)
+    # load cl-args into local namespace # pylint: disable=E0602
+    locals().update(args)
+
+    if list_marts or list_datasets or list_attributes:
+        list_bm_info(list_marts, list_datasets, list_attributes, mart, dataset)
 
     validate_args(args)
-    columns, intypes, outtypes = args["--column"], args["--intype"
-                                                        ], args["--outtype"]
-    dataset, mart = args["--dataset"], args["--mart"]
-
-    if args["--list-marts"]:
-        marts = get_marts()
-        marts.to_csv(sys.stdout, sep="\t", index=False)
-        sys.exit()
-    if args["--list-datasets"]:
-        datasets = get_datasets(mart)
-        datasets.to_csv(sys.stdout, sep="\t", index=False)
-        sys.exit()
-    if args["--list-attributes"]:
-        attributes = get_bm_attributes(mart, dataset)
-        attributes.to_csv(sys.stdout, sep="\t", index=False)
-        sys.exit()
 
     in_df = read_indata(args["FILE"], False)
 
-    out_df = in_df.copy()
+    in_df = append_data_to_infile(in_df, mergecol, intype, outtype, dataset,
+                                  mart)
 
-    for column, intype, outtype in zip(columns, intypes, outtypes):
-
-        # sorting to ensure caching is triggered at every opportunity
-        # (get_data produces a bi-directional map so order does not matter)
-
-        # print(ordered_intype, ordered_outtype)
-        intype_outtype_df = get_data(intype, outtype, dataset,
-                                     mart)
-        out_df = attach_column(out_df, intype_outtype_df, column, intype)
-
-
-    # if args["--website"]:
-    # webbrowser.open_new_tab("http://github.com/endrebak/biomartian")
-    # if args["--issues"]:
-    # webbrowser.open_new_tab("http://github.com/endrebak/biomartian/issues")
-    # else:
-    # delay loading so that help message screen shown instantaneously
-
-    out_df.to_csv(sys.stdout, sep="\t", index=False)
+    in_df.head().to_csv(sys.stdout, sep="\t", index=False, na_rep="NA")
