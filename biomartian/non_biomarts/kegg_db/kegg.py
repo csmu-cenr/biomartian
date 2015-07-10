@@ -13,8 +13,6 @@ def get_pathways_genes(species):
         entrez, kegg = re.split(all_but_digits, gene_pathway)
         gene_pathway_rowdicts.append({"entrez_gene": entrez, "kegg": kegg})
 
-
-
     pathway_genes = pd.DataFrame.from_dict(gene_pathway_rowdicts)
 
     return pathway_genes

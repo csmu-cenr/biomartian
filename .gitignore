@@ -1,10 +1,10 @@
 examples/output_data/
 *flycheck*
+*.egg*
+build/
+dist/
 cache/
 *hidden*
 *fuse*
 *temp/
 *.pyc
-*egg-info*
-*build*
-*dist*

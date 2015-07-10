@@ -88,7 +88,7 @@ if __name__ == "__main__":
     from biomartian.read_indata.read_indata import read_indata
     from biomartian.config.other_data import other_data_df
     from biomartian.lists.get_lists import get_marts#, get_datasets
-    # from biomartian.lists.get_lists import get_attributes
+    from biomartian.lists.get_lists import get_bm_attributes
 
     validate_args(args)
     columns, intypes, outtypes = args["--column"], args["--intype"
@@ -104,7 +104,7 @@ if __name__ == "__main__":
         datasets.to_csv(sys.stdout, sep="\t", index=False)
         sys.exit()
     if args["--list-attributes"]:
-        attributes = get_attributes(mart, dataset)
+        attributes = get_bm_attributes(mart, dataset)
         attributes.to_csv(sys.stdout, sep="\t", index=False)
         sys.exit()
 
@@ -121,6 +121,7 @@ if __name__ == "__main__":
         intype_outtype_df = get_data(intype, outtype, dataset,
                                      mart)
         out_df = attach_column(out_df, intype_outtype_df, column, intype)
+
 
     # if args["--website"]:
     # webbrowser.open_new_tab("http://github.com/endrebak/biomartian")
