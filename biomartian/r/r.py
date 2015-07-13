@@ -1,11 +1,11 @@
-from os.path import dirname, join as path_join
+from os.path import join as path_join
 from subprocess import call
 
 from widediaper import R
 from biomartian.config.cache_settings import memory, default_cache_path
 
 
-def set_up_mart(mart, dataset=None, outstream=True):
+def set_up_mart(mart, dataset=None, outstream=False):
 
     r = R(outstream)
 
@@ -48,7 +48,7 @@ def get_attributes(mart, dataset):
 
 
 @memory.cache(verbose=0)
-def get_bm(intype, outtype, dataset, mart, cache_directory=default_cache_path):
+def get_bm(intype, outtype, dataset, mart):
 
     """Queries biomart for data.
     Gets the whole map between INTYPE <-> OUTTYPE and caches it so that disk
@@ -62,7 +62,7 @@ def get_bm(intype, outtype, dataset, mart, cache_directory=default_cache_path):
 
     map_df = r.get("input_output_map_df")
     outfile = _get_data_output_filename(intype, outtype, dataset, mart,
-                                       cache_directory)
+                                        default_cache_path=default_cache_path)
     map_df.to_csv(outfile, sep="\t", index=False)
 
     return map_df
