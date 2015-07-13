@@ -36,7 +36,6 @@ from docopt import docopt
 import sys
 
 def list_bm_info(list_marts, list_datasets, list_attributes, mart, dataset):
-
     if list_marts:
         lists = get_marts()
     if list_datasets:
