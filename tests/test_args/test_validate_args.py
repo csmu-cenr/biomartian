@@ -19,15 +19,13 @@ def describe_validate_args():
 
     @pytest.fixture
     def valid_args():
-        return {'--column': ['0', '0'],
-                '--intype': ['external_gene_name', 'external_gene_name'],
-                '--outindex': [2],
-                '--outtype': ['entrezgene', 'refseq_mrna'],}
+        return {'mergecol': ['0', '0'],
+                'intype': ['external_gene_name', 'external_gene_name'],
+                'outtype': ['entrezgene', 'refseq_mrna'],}
 
     @pytest.fixture
     def invalid_args_too_few_intypes():
 
-        return {'--column': ['0', '0'],
-                '--intype': ['external_gene_name'],
-                '--outindex': [2],
-                '--outtype': ['entrezgene', 'refseq_mrna'],}
+        return {'mergecol': ['0', '0'],
+                'intype': ['external_gene_name'],
+                'outtype': ['entrezgene', 'refseq_mrna'],}
