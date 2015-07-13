@@ -4,6 +4,7 @@ For help and examples, visit github.com/endrebak/biomartian
 
 Usage:
     bm [--mart=MART] [--dataset=DATA] --mergecol=COL... --intype=IN... --outtype=OUT... [--noheader] FILE
+    bm [--mart=MART] [--dataset=DATA] --intype=IN --outtype=OUT
     bm --list-marts
     bm [--mart=MART] --list-datasets
     bm [--mart=MART] [--dataset=DATASET] --list-attributes
@@ -35,6 +36,7 @@ from __future__ import print_function
 from docopt import docopt
 import sys
 
+
 def list_bm_info(list_marts, list_datasets, list_attributes, mart, dataset):
     if list_marts:
         lists = get_marts()
@@ -46,18 +48,26 @@ def list_bm_info(list_marts, list_datasets, list_attributes, mart, dataset):
     lists.to_csv(sys.stdout, sep="\t", index=False)
     sys.exit()
 
+
 def append_data_to_infile(in_df, mergecols, intypes, outtypes, dataset, mart):
 
     for column, intype, outtype in zip(mergecols, intypes, outtypes):
 
-        # sorting to ensure caching is triggered at every opportunity
-        # (get_data produces a bi-directional map so order does not matter)
-        sorted_intype, sorted_outtype = sorted([intype, outtype])
+        sorted_intype, sorted_outtype = _sort_args([intype, outtype])
 
         intype_outtype_df = get_bm(sorted_intype, sorted_outtype, dataset, mart)
         in_df = attach_data(in_df, intype_outtype_df, column, intype)
 
     return in_df
+
+
+def _sort_args(args):
+
+    """Sorting args before calling function to ensure cache is triggered at
+    every opportunity.
+    """
+
+    return sorted(args)
 
 if __name__ == "__main__":
 
@@ -84,14 +94,17 @@ if __name__ == "__main__":
     # load cl-args into local namespace # pylint: disable=E0602
     locals().update(args)
 
+    # just list data and exit
     if list_marts or list_datasets or list_attributes:
         list_bm_info(list_marts, list_datasets, list_attributes, mart, dataset)
 
-    validate_args(args)
-
-    in_df = read_indata(args["FILE"], False)
-
-    in_df = append_data_to_infile(in_df, mergecol, intype, outtype, dataset,
+    if FILE:
+        validate_args(args)
+        in_df = read_indata(FILE, False)
+        result_df = append_data_to_infile(in_df, mergecol, intype, outtype, dataset,
                                   mart)
+    else:
+        sorted_intype, sorted_outtype = _sort_args(intype + outtype)
+        result_df = get_bm(sorted_intype, sorted_outtype, dataset, mart)
 
-    in_df.head().to_csv(sys.stdout, sep="\t", index=False, na_rep="NA")
+    result_df.to_csv(sys.stdout, sep="\t", index=False, na_rep="NA")
