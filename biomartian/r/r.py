@@ -36,7 +36,6 @@ def get_datasets(mart):
 
     r = set_up_mart(mart)
     r("datasets = listDatasets(mart)")
-    print(r("datasets"))
     return r.get("datasets")
 
 
