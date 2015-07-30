@@ -4,7 +4,7 @@ setup(
     packages = ["biomartian", "biomartian/args", "biomartian/r", "biomartian/get_mappings",
                "biomartian/config", "biomartian/config"],
     scripts = ["bin/biomartian"],
-    version = "0.0.1",
+    version = "0.0.2",
     description = "Access BioMart from the command line.",
     author = "Endre Bakken Stovner",
     author_email = "endrebak@stud.ntnu.no",
@@ -23,4 +23,4 @@ setup(
         "Operating System :: POSIX :: Linux",
         "Operating System :: MacOS :: MacOS X",
         "Topic :: Scientific/Engineering"],
-    long_description = ("Access BioMart from the command line"))
+    long_description = ("Access BioMart from the command line. See webpage for more info."))
