@@ -37,7 +37,13 @@ def get_datasets(mart):
 
     r = set_up_mart(mart)
     r("datasets = listDatasets(mart)")
-    return r.get("datasets")
+    try:
+        return r.get("datasets")
+    except IOError:
+        print(("Mart '{mart}' not found. Aborting."
+               .format(**vars())))
+        sys_exit(1)
+
 
 
 @memory.cache(verbose=0)
@@ -46,7 +52,12 @@ def get_attributes(mart, dataset):
     r = set_up_mart(mart, dataset)
     r("attributes = listAttributes(mart)")
 
-    return r.get("attributes")
+    try:
+        return r.get("attributes")
+    except IOError:
+        print(("Dataset '{dataset}' not found in mart '{mart}'. Aborting."
+               .format(**vars())))
+        sys_exit(1)
 
 
 @memory.cache(verbose=0)
@@ -61,9 +72,9 @@ def get_bm(intype, outtype, dataset, mart):
                    "'{output_type}'), mart = mart, values = '*')"
                    .format(input_type=intype, output_type=outtype))
 
+    r(get_command)
+
     try:
-        print("oooo")
-        r(get_command)
         map_df = r.get("input_output_map_df")
     except IOError:
         print(("No data found for mart '{mart}', dataset '{dataset}' \n"
