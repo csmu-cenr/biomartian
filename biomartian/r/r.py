@@ -62,6 +62,7 @@ def get_bm(intype, outtype, dataset, mart):
                    .format(input_type=intype, output_type=outtype))
 
     try:
+        print("oooo")
         r(get_command)
         map_df = r.get("input_output_map_df")
     except IOError:
