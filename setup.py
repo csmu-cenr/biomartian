@@ -1,10 +1,9 @@
 from setuptools import setup
 setup(
     name = "biomartian",
-    packages = ["biomartian", "biomartian/args", "biomartian/r", "biomartian/get_mappings",
-               "biomartian/config", "biomartian/config"],
+    packages = ["biomartian", "biomartian/args", "biomartian/r", "biomartian/lists", "biomartian/config"],
     scripts = ["bin/biomartian"],
-    version = "0.0.2",
+    version = "0.0.3",
     description = "Access BioMart from the command line.",
     author = "Endre Bakken Stovner",
     author_email = "endrebak@stud.ntnu.no",

@@ -11,7 +11,7 @@ Usage:
 
 Arguments:
     FILE                   file with COL(s) to join mart data on (- for STDIN)
-    -i IN --intype=IN     the datatype in the column to merge on
+    -i IN --intype=IN      the datatype in the column to merge on
     -o OUT --outtype=OUT   the datatype to get (joining on value COL)
     -c COL --mergecol=COL  name or number of the column to join on in FILE
 
