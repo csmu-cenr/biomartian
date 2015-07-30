@@ -60,13 +60,11 @@ def get_bm(intype, outtype, dataset, mart):
     get_command = ("input_output_map_df <- getBM(attributes=c('{input_type}', "
                    "'{output_type}'), mart = mart, values = '*')"
                    .format(input_type=intype, output_type=outtype))
-    r(get_command)
 
     try:
+        r(get_command)
         map_df = r.get("input_output_map_df")
     except IOError:
-        pass
-    finally:
         print(("No data found for mart '{mart}', dataset '{dataset}' \n"
                "and attributes '{intype}' and '{outtype}'. Aborting."
                .format(**vars())))
