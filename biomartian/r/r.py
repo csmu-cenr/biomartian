@@ -65,11 +65,12 @@ def get_bm(intype, outtype, dataset, mart):
     try:
         map_df = r.get("input_output_map_df")
     except IOError:
+        pass
+    finally:
         print(("No data found for mart '{mart}', dataset '{dataset}' \n"
                "and attributes '{intype}' and '{outtype}'. Aborting."
                .format(**vars())))
         sys_exit(1)
-
 
     outfile = _get_data_output_filename(intype, outtype, dataset, mart,
                                         default_cache_path=default_cache_path)
