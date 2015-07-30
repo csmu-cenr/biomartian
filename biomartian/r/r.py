@@ -1,3 +1,4 @@
+from sys import exit as sys_exit
 from os.path import join as path_join
 from subprocess import call
 
@@ -44,6 +45,7 @@ def get_attributes(mart, dataset):
 
     r = set_up_mart(mart, dataset)
     r("attributes = listAttributes(mart)")
+
     return r.get("attributes")
 
 
@@ -60,7 +62,15 @@ def get_bm(intype, outtype, dataset, mart):
                    .format(input_type=intype, output_type=outtype))
     r(get_command)
 
-    map_df = r.get("input_output_map_df")
+    try:
+        map_df = r.get("input_output_map_df")
+    except IOError:
+        print(("No data found for mart '{mart}', dataset '{dataset}' \n"
+               "and attributes '{intype}' and '{outtype}'. Aborting."
+               .format(**vars())))
+        sys_exit(1)
+
+
     outfile = _get_data_output_filename(intype, outtype, dataset, mart,
                                         default_cache_path=default_cache_path)
     map_df.to_csv(outfile, sep="\t", index=False)
