@@ -1,13 +1,13 @@
-"""bm
+"""biomartian
 
 For help and examples, visit github.com/endrebak/biomartian
 
 Usage:
-    bm [--mart=MART] [--dataset=DATA] --mergecol=COL... --intype=IN... --outtype=OUT... [--noheader] FILE
-    bm [--mart=MART] [--dataset=DATA] --intype=IN --outtype=OUT
-    bm --list-marts
-    bm [--mart=MART] --list-datasets
-    bm [--mart=MART] [--dataset=DATASET] --list-attributes
+    biomartian [--mart=MART] [--dataset=DATA] --mergecol=COL... --intype=IN... --outtype=OUT... [--noheader] FILE
+    biomartian [--mart=MART] [--dataset=DATA] --intype=IN --outtype=OUT
+    biomartian --list-marts
+    biomartian [--mart=MART] --list-datasets
+    biomartian [--mart=MART] [--dataset=DATASET] --list-attributes
 
 Arguments:
     FILE                   file with COL(s) to join mart data on (- for STDIN)
