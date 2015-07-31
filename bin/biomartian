@@ -2,6 +2,7 @@
 
 """biomartian
 
+Query biomart from the command line.
 For help and examples, visit github.com/endrebak/biomartian
 
 Usage:
