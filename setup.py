@@ -3,7 +3,7 @@ setup(
     name = "biomartian",
     packages = ["biomartian", "biomartian/args", "biomartian/r", "biomartian/config"],
     scripts = ["bin/biomartian"],
-    version = "0.0.6",
+    version = "0.0.7",
     description = "Access BioMart from the command line.",
     author = "Endre Bakken Stovner",
     author_email = "endrebak@stud.ntnu.no",

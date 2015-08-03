@@ -96,6 +96,7 @@ if __name__ == "__main__":
     # load cl-args into local namespace # pylint: disable=E0602
     locals().update(args)
 
+
     # just list data and exit
     if list_marts or list_datasets or list_attributes:
         list_bm_info(list_marts, list_datasets, list_attributes, mart, dataset)
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     # if infile given, append to infile and send result to stdout
     if FILE:
         validate_args(args)
-        in_df = read_indata(FILE, False)
+        in_df = read_indata(FILE, noheader)
         result_df = append_data_to_infile(in_df, mergecol, intype, outtype, dataset,
                                   mart)
     # if no infile given just dump all data to stdout
