@@ -1,72 +1,119 @@
-# biomartian
-Convert gene names via the command line
+```
+ _     _                            _   _
+| |__ (_) ___  _ __ ___   __ _ _ __| |_(_) __ _ _ __
+| '_ \| |/ _ \| '_ ` _ \ / _` | '__| __| |/ _` | '_ \
+| |_) | | (_) | | | | | | (_| | |  | |_| | (_| | | | |
+|_.__/|_|\___/|_| |_| |_|\__,_|_|   \__|_|\__,_|_| |_|
+                   Query biomart from the command line
+```
 
-# Undergoing massive rewrite atm. Check back in a week :)
+biomartian enables querying BioMart from the command line. It requires having R and the R library biomaRt installed.
 
-# TODO
+biomartian greatly simplifies extracting data from BioMart.
 
-* decorator with to/from in header
+Instead of having to
 
-# Example
+1. open an R session
+2. load biomaRt
+3. load a mart and dataset
+4. write the code required to extract the data you need
+5. merge the new data into a dataset
 
-#### Input data
-Any tab-delimited file will do.
-(Obviously, non-data columns and headers do not need to be surrounded with "".)
+you can simply call a single simple biomartian command!
 
-```bash
-endrebak@havpryd ~/C/biomartian> head examples/MedIIvsD.txt
-"Gene"	"logFC"	"AveExpr"
-"Brinp3"	-1.92040698516041	6.33733039821208
-"Tle4"	-1.68336568459123	6.88285301682597
-"Rab26"	-1.83060602348488	5.57320249551508
-"Ipcef1"	-1.97594838378759	4.80047582596103
-"Rassf2"	1.08094275753519	5.89304511598244
-"Nxph3"	-3.27998684674834	4.6844454153822
-"Sstr2"	-1.81121949561318	4.21103179776388
-"Lrrtm2"	-1.3944222489979	6.54430209960799
-"Slc12a4"	1.15991299670081	4.67930875026887
+biomartian also aids BioMart discoverability since you can use standard tools like `grep` to search BioMart results instead of having to use Rs clunky and verbose ersatz implementation.
+
+Lastly, biomartian caches all queries across sessions (in `~/.biomartian`), so that subsequent queries are instantaneous.
+
+# Examples
+
+#### Find the name of mrna ids in BioMart for the common rat
+
+```
+biomartian -d rnorvegicus_gene_ensembl --list-attributes | grep -i mrna
+refseq_mrna	RefSeq mRNA [e.g. NM_001195597]
+refseq_mrna_predicted	RefSeq mRNA predicted [e.g. XM_001125684]
+```
+
+Note that we did not need to write the name of the mart since `ensembl` is the default.
+
+#### Get the refseq mrna id for all regular gene names and attach them to an input file
+
+```
+$ head simple.txt
+"logFC"	"AveExpr"
+"Ipcef1"	-2.70987558746701	4.80047582653889
+"Sema3b"	2.00143465979322	3.82969788437155
+"Rab26"	-2.40250648553797	5.57320249609294
+"Arhgap25"	-1.84668909768998	3.66617832656769
+"Ociad2"	-1.99052684394044	5.26213130909702
+"Mmp17"	-2.01026790614161	4.88012776225311
+"C4a"	2.22003976804983	3.52842041243544
+"Gna14"	-2.42391191670209	1.56313048066253
+"Kcna6"	-1.74168813159872	6.54586068659631
+
+$ biomartian -d rnorvegicus_gene_ensembl -c 0 -i external_gene_name -o refseq_mrna simple.txt
+index	logFC	AveExpr	refseq_mrna
+Ipcef1	-2.70987558746701	4.80047582653889	NM_001170799
+Sema3b	2.00143465979322	3.82969788437155	NM_001079942
+Rab26	-2.40250648553797	5.57320249609294	NM_133580
+Arhgap25	-1.84668909768998	3.66617832656769	NM_001109247
+Ociad2	-1.99052684394044	5.26213130909702	NM_001271181
+Mmp17	-2.01026790614161	4.88012776225311	NM_001105925
+C4a	2.22003976804983	3.52842041243544	NM_031504
+C4a	2.22003976804983	3.52842041243544	NA
+Gna14	-2.42391191670209	1.56313048066253	NM_001013151
+Kcna6	-1.74168813159872	6.54586068659631	NM_023954
+```
+
+# Install
+
+```
+pip install biomartian
 ```
 
 #### Usage
 
-`python biomartian.py <name_of_column_to_convert> <input_type> <output_type> <species> <input_file>`
-
-```bash
-endrebak@havpryd ~/C/biomartian> python biomartian.py Gene external_gene_name \
-refseq_mrna rnorvegicus_gene_ensembl examples/MedIIvsD.txt  | head
-Gene	logFC	AveExpr	refseq_mrna
-Brinp3	-1.9204069851604098	6.33733039821208	NM_173121
-Tle4	-1.68336568459123	6.882853016825969	NM_019141
-Rab26	-1.83060602348488	5.57320249551508	NM_133580
-Ipcef1	-1.97594838378759	4.80047582596103	NM_001170799
-Rassf2	1.08094275753519	5.89304511598244	NM_001037096
-Nxph3	-3.27998684674834	4.684445415382201	NM_021679
-Sstr2	-1.8112194956131797	4.21103179776388	NM_019348
-Lrrtm2	-1.3944222489979	6.5443020996079895	NM_001109469
-Slc12a4	1.15991299670081	4.67930875026887	NM_019229
 ```
+biomartian
 
-#### Logging
+Query biomart from the command line.
+For help and examples, visit github.com/endrebak/biomartian
 
-To show script progress info on stderr add logging as final argument
+Usage:
+    biomartian [--mart=MART] [--dataset=DATA] --mergecol=COL... --intype=IN... --outtype=OUT... [--noheader] FILE
+    biomartian [--mart=MART] [--dataset=DATA] --intype=IN --outtype=OUT
+    biomartian --list-marts
+    biomartian [--mart=MART] --list-datasets
+    biomartian [--mart=MART] [--dataset=DATASET] --list-attributes
 
-```bash
-endrebak@havpryd ~/C/biomartian> python biomartian.py Gene external_gene_name \
-           refseq_mrna rnorvegicus_gene_ensembl examples/MedIIvsD.txt logging
-Reading input table from file: examples/MedIIvsD.txt (Time: Wed, 03 Jun 2015 12:48:58)
-Loading biomaRt for species: rnorvegicus_gene_ensembl (Time: Wed, 03 Jun 2015 12:48:58)
-Converting 4537 gene names in file examples/MedIIvsD.txt to refseq_mrna (Time: Wed, 03 Jun 2015 12:49:04)
-Creating new dataframe with additional gene names. (Time: Wed, 03 Jun 2015 12:49:06)
-...
+Arguments:
+    FILE                   file with COL(s) to join mart data on (- for STDIN)
+    -i IN --intype=IN      the datatype in the column to merge on
+    -o OUT --outtype=OUT   the datatype to get (joining on value COL)
+    -c COL --mergecol=COL  name or number of the column to join on in FILE
+
+Note:
+    Required args --intype, --outtype and --mergecol must be equal in number.
+
+Options:
+    -h      --help          show this message
+    -m MART --mart=MART     which mart to use [default: ensembl]
+    -d DATA --dataset=DATA  which dataset to use [default: hsapiens_gene_ensembl]
+    -n --noheader           the input data does not contain a header (must
+                            use integers to denote COL)
+
+Lists:
+    --list-marts       show all available marts
+    --list-datasets    show all available datasets for MART
+    --list-attributes  show all kinds of data available for MART and DATASET
 ```
 
 # TODO
 
-* Add options to list possible species and possible gene types per species
-* Allow files without header for index column (how?)
-* Add input separator argument; infer by default
-* Add argument to tell whether file includes header or not.
-* Allow both header name and column number to indicate column to convert
+* add `verbose` flag that outputs all called R commands to stderr.
+* lose the R requirement (long term goal)
+* enable viewing dates of cached data
 
 # Issues
 
@@ -74,5 +121,38 @@ Please use the biomartian [issues page](https://github.com/endrebak/biomartian/i
 
 # Requirements
 
-* python: `pyper`, `pandas`
+* python: `widediaper`, `pandas`, `docopt`, `joblib`, `ebs` (all installed automatically when using pip)
 * R: `biomart`
+
+# Known issues
+
+* Entrez gene identifiers shown as floats (should be ints)
+
+```bash
+$ head simple.txt
+logFC	AveExpr
+Ipcef1	-2.70987558746701	4.80047582653889
+Sema3b	2.00143465979322	3.82969788437155
+Rab26	-2.40250648553797	5.57320249609294
+Arhgap25	-1.84668909768998	3.66617832656769
+Ociad2	-1.99052684394044	5.26213130909702
+Mmp17	-2.01026790614161	4.88012776225311
+C4a	2.22003976804983	3.52842041243544
+Gna14	-2.42391191670209	1.56313048066253
+Kcna6	-1.74168813159872	6.54586068659631
+
+$ biomartian -m ensembl -d rnorvegicus_gene_ensembl -c 0 -i external_gene_name -o entrezgene ~/Code/biomartian/examples/example_file_no_header_index.txt
+index	logFC	AveExpr	entrezgene
+Ipcef1	-2.70987558746701	4.80047582653889	361474.0
+Sema3b	2.00143465979322	3.82969788437155	363142.0
+Rab26	-2.40250648553797	5.57320249609294	NA
+Arhgap25	-1.84668909768998	3.66617832656769	500246.0
+Ociad2	-1.99052684394044	5.26213130909702	NA
+Mmp17	-2.01026790614161	4.88012776225311	288626.0
+C4a	2.22003976804983	3.52842041243544	24233.0
+C4a	2.22003976804983	3.52842041243544	103689965.0
+Gna14	-2.42391191670209	1.56313048066253	309242.0
+Kcna6	-1.74168813159872	6.54586068659631	64358.0
+```
+
+This happens because the entrezgene column contains nans (which are of type float) so that the whole column is promoted to float. Surprisingly, there does not seem to be an easy, non-hackish or non-brittle fix for this ([background info](http://pandas.pydata.org/pandas-docs/stable/gotchas.html#nan-integer-na-values-and-na-type-promotions)). If you have a solution, please post it on the issues page.
