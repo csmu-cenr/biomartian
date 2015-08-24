@@ -21,8 +21,6 @@ Instead of having to
 
 you can simply call a single simple biomartian command!
 
-Furthermore, biomartian is all Python, so all the required dependencies are installed with a simple `pip install biomartian`.
-
 biomartian also aids BioMart discoverability since you can use standard tools like `grep` to search BioMart results instead of having to use Rs clunky and verbose ersatz implementation.
 
 Lastly, biomartian caches all queries across sessions (in `~/.biomartian`), so that subsequent queries are instantaneous.
@@ -124,7 +122,13 @@ Please use the biomartian [issues page](https://github.com/endrebak/biomartian/i
 
 Python, either version 2.7 or 3.x.
 
-* `bioservices`, `pandas`, `docopt`, `joblib`, `ebs` (all installed automatically when using pip)
+* `bioservices`, `pandas`, `docopt`, `joblib`, `ebs`
+
+biomartian is 100% Python, so all the required dependencies are installed with a simple `pip install biomartian`.
+
+# API
+
+biomartian does not intentionally expose an API, but please see the module `biomartian/bm_queries/bm_query.py` to learn how to query biomart using Python. It *is* serviceable as an API, and some of my packages use it as one so it will most likely be extremely stable.
 
 # Thanks
 

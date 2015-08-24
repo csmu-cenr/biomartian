@@ -49,7 +49,7 @@ def get_bm(intype, outtype, dataset, mart):
     Gets the whole map between INTYPE <-> OUTTYPE and caches it so that disk
     based lookups are used afterwards."""
 
-    bm = BioMart()
+    bm = BioMart(verbose=False)
 
     bm.new_query()
 
