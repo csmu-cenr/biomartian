@@ -40,6 +40,8 @@ from docopt import docopt
 import sys
 from numpy import equal, mod
 
+import warnings
+warnings.filterwarnings("ignore")
 
 def list_bm_info(list_marts, list_datasets, list_attributes, mart, dataset):
     if list_marts:
@@ -123,7 +125,7 @@ if __name__ == "__main__":
     from ebs.merge_cols import attach_data
 
     from biomartian.args.validate_args import validate_args
-    from biomartian.biomart.queries import get_marts, get_datasets, get_attributes, get_bm
+    from biomartian.bm_queries.bm_query import get_marts, get_datasets, get_attributes, get_bm
 
     args = turn_docopt_arg_names_into_valid_var_names(args)
     # load cl-args into local namespace # pylint: disable=E0602
