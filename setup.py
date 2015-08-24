@@ -1,16 +1,16 @@
 from setuptools import setup
 setup(
     name = "biomartian",
-    packages = ["biomartian", "biomartian/args", "biomartian/r", "biomartian/config"],
+    packages = ["biomartian", "biomartian/args", "biomartian/biomart", "biomartian/config"],
     scripts = ["bin/biomartian"],
-    version = "0.0.9",
+    version = "0.0.10",
     description = "Access BioMart from the command line.",
     author = "Endre Bakken Stovner",
     author_email = "endrebak@stud.ntnu.no",
     url = "http://github.com/endrebak/biomartian",
     keywords = ["BioMart"],
     license = ["GPL-3.0"],
-    install_requires = ["pandas>=0.16", "ebs", "docopt", "joblib", "widediaper"],
+    install_requires = ["pandas>=0.16", "ebs", "docopt", "joblib", "bioservices"],
     classifiers = [
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",

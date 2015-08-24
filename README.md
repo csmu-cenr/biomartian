@@ -7,7 +7,7 @@
                    Query biomart from the command line
 ```
 
-biomartian enables querying BioMart from the command line. It requires having R and the R library biomaRt installed.
+biomartian enables querying BioMart from the command line.
 
 biomartian greatly simplifies extracting data from BioMart.
 
@@ -20,6 +20,8 @@ Instead of having to
 5. merge the new data into a dataset
 
 you can simply call a single simple biomartian command!
+
+Furthermore, biomartian is all Python, so all the required dependencies are installed with a simple `pip install biomartian`.
 
 biomartian also aids BioMart discoverability since you can use standard tools like `grep` to search BioMart results instead of having to use Rs clunky and verbose ersatz implementation.
 
@@ -111,9 +113,8 @@ Lists:
 
 # TODO
 
-* add `verbose` flag that outputs all called R commands to stderr.
-* lose the R requirement (long term goal)
 * enable viewing dates of cached data
+* enable removing one single dataset from the cache
 
 # Issues
 
@@ -121,38 +122,12 @@ Please use the biomartian [issues page](https://github.com/endrebak/biomartian/i
 
 # Requirements
 
-* python: `widediaper`, `pandas`, `docopt`, `joblib`, `ebs` (all installed automatically when using pip)
-* R: `biomart`
+Python, either version 2.7 or 3.x.
 
-# Known issues
+* `bioservices`, `pandas`, `docopt`, `joblib`, `ebs` (all installed automatically when using pip)
 
-* Entrez gene identifiers shown as floats (should be ints)
+# Thanks
 
-```bash
-$ head simple.txt
-logFC	AveExpr
-Ipcef1	-2.70987558746701	4.80047582653889
-Sema3b	2.00143465979322	3.82969788437155
-Rab26	-2.40250648553797	5.57320249609294
-Arhgap25	-1.84668909768998	3.66617832656769
-Ociad2	-1.99052684394044	5.26213130909702
-Mmp17	-2.01026790614161	4.88012776225311
-C4a	2.22003976804983	3.52842041243544
-Gna14	-2.42391191670209	1.56313048066253
-Kcna6	-1.74168813159872	6.54586068659631
+Thomas Cokelaer for his [bioservices package](https://github.com/cokelaer/bioservices).
 
-$ biomartian -m ensembl -d rnorvegicus_gene_ensembl -c 0 -i external_gene_name -o entrezgene ~/Code/biomartian/examples/example_file_no_header_index.txt
-index	logFC	AveExpr	entrezgene
-Ipcef1	-2.70987558746701	4.80047582653889	361474.0
-Sema3b	2.00143465979322	3.82969788437155	363142.0
-Rab26	-2.40250648553797	5.57320249609294	NA
-Arhgap25	-1.84668909768998	3.66617832656769	500246.0
-Ociad2	-1.99052684394044	5.26213130909702	NA
-Mmp17	-2.01026790614161	4.88012776225311	288626.0
-C4a	2.22003976804983	3.52842041243544	24233.0
-C4a	2.22003976804983	3.52842041243544	103689965.0
-Gna14	-2.42391191670209	1.56313048066253	309242.0
-Kcna6	-1.74168813159872	6.54586068659631	64358.0
-```
-
-This happens because the entrezgene column contains nans (which are of type float) so that the whole column is promoted to float. Surprisingly, there does not seem to be an easy, non-hackish or non-brittle fix for this ([background info](http://pandas.pydata.org/pandas-docs/stable/gotchas.html#nan-integer-na-values-and-na-type-promotions)). If you have a solution, please post it on the issues page.
+See his page for citation info.

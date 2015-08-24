@@ -8,3 +8,4 @@ cache/
 *fuse*
 *temp/
 *.pyc
+*.py
