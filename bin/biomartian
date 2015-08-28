@@ -86,7 +86,11 @@ def _turn_int_cols_with_na_into_str(map_df, outtype):
     outcol = map_df[outtype]
 
     is_float = issubclass(outcol.dtype.type, float)
-    all_are_ints = all(equal(mod(outcol.dropna(), 1), 0))
+
+    try:
+        all_are_ints = all(equal(mod(outcol.dropna(), 1), 0))
+    except TypeError:
+        return map_df
 
     if is_float and all_are_ints:
         map_df[outtype] = map_df[outtype].astype(str).apply(
